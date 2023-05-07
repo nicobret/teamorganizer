@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 :root {
+  font-family: 'Instrument Serif', serif;
+  font-family: 'Raleway', sans-serif;
+  line-height: 2;
+  color: rgb(34, 34, 34);
+
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

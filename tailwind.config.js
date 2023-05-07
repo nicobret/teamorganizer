@@ -2,7 +2,11 @@
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ["Raleway", "sans-serif"],
+      title: ["Instrument serif", "serif"],
+    },
     extend: {},
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

@@ -1,79 +1,46 @@
 import { User } from "../../lib/users";
 import UserGroup from "./components/UserGroup";
 
-export type Teams = {
-  week: number;
-  available: User[];
-  unavailable: User[];
-  teamA: User[];
-  teamB: User[];
-};
-
 interface TeamProps {
   user: User;
   userList: User[];
-  setUserList: (userList: User[]) => void;
+  setUserList: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 export default function Team({ user, userList, setUserList }: TeamProps) {
   const currentUser = userList.find((u: User) => u.id === user.id);
-  console.log("🚀 ~ file: Team.tsx:19 ~ Team ~ currentUser:", currentUser);
-
-  const availableUsers = userList.filter(
-    (user: User) => user.available === "Oui"
-  );
-  const unavailableUsers = userList.filter(
-    (user: User) => user.available === "Non"
-  );
-  const waitingUsers = userList.filter(
-    (user: User) => !user.retired && user.available === null
-  );
-  const retiredUsers = userList.filter((user: User) => user.retired);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
-    setUserList((prevState: User[]) => {
-      return prevState.map((user: User) => {
-        if (user.id === currentUser?.id) {
-          return { ...user, available: e.target.value };
-        } else {
-          return user;
-        }
-      });
-    });
+    setUserList(
+      userList.map((u: User) =>
+        u.id === user.id ? { ...u, available: e.target.value } : u
+      )
+    );
   }
 
   return (
-    <div className="space-y-4 border p-4">
-      <h2 className="text-xl">Disponibilité</h2>
+    <fieldset className="flex items-center justify-center gap-4">
+      <p className="font-title text-2xl italic">Je suis disponible</p>
+      <input
+        type="radio"
+        id="available"
+        name="available"
+        value="Oui"
+        checked={currentUser?.available === "Oui"}
+        onChange={handleChange}
+        className="form-radio checked:bg-emerald-400 checked:hover:bg-emerald-400 focus:bg-emerald-400 focus:outline-none focus:ring-1 focus:ring-emerald-400 checked:focus:bg-emerald-400 checked:active:bg-emerald-400"
+      />
+      <label htmlFor="available">Oui</label>
 
-      <fieldset>
-        <legend>Je suis disponible</legend>
-        <input
-          type="radio"
-          id="available"
-          name="available"
-          value="Oui"
-          checked={currentUser?.available === "Oui"}
-          onChange={handleChange}
-        />
-        <label htmlFor="available">Oui</label>
-
-        <input
-          type="radio"
-          id="available"
-          name="available"
-          value="Non"
-          checked={currentUser?.available === "Non"}
-          onChange={handleChange}
-        />
-        <label htmlFor="available">Non</label>
-      </fieldset>
-
-      <UserGroup title="Joueurs disponibles" users={availableUsers} />
-      <UserGroup title="Joueurs indisponibles" users={unavailableUsers} />
-      <UserGroup title="Joueurs en attente" users={waitingUsers} />
-      <UserGroup title="Ils ont raccroché les crampons" users={retiredUsers} />
-    </div>
+      <input
+        type="radio"
+        id="notavailable"
+        name="notavailable"
+        value="Non"
+        checked={currentUser?.available === "Non"}
+        onChange={handleChange}
+      />
+      <label htmlFor="available">Non</label>
+    </fieldset>
   );
 }

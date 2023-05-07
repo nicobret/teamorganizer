@@ -1,7 +1,7 @@
 export type User = {
     id: number;
     name: string;
-    available: "Oui" | "Non" | null;
+    available: string | null;
     team: "A" | "B" | null;
     retired?: boolean;
   };

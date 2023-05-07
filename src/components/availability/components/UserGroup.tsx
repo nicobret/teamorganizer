@@ -11,13 +11,14 @@ export default function UserGroup({
     <div>
       <h3 className="font-semibold">{title}</h3>
 
-      <div>
+      <ul>
+        {users.length === 0 && <p>-</p>}
         {users.map((user: User) => (
-          <div key={user.id}>
+          <li key={user.id}>
             <p>{user.name}</p>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
