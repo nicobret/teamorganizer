@@ -9,7 +9,7 @@ interface HeaderProps {
   setUser: (user: User) => void;
 }
 
-export default function Header({ userData, user, setUser }: HeaderProps) {
+export default function Header() {
   const [week, setWeek] = useState(1);
   const [open, setOpen] = useState(false);
 
@@ -20,7 +20,7 @@ export default function Header({ userData, user, setUser }: HeaderProps) {
           Team Organizer
         </h1>
 
-        <div className="ml-auto flex items-center gap-2">
+        {/* <div className="ml-auto flex items-center gap-2">
           <p className="hidden md:block">Semaine du</p>
 
           <select
@@ -36,7 +36,7 @@ export default function Header({ userData, user, setUser }: HeaderProps) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* <button
           className="rounded border-2 border-emerald-400 px-3 py-1 transition hover:brightness-110 active:brightness-125"
@@ -45,7 +45,7 @@ export default function Header({ userData, user, setUser }: HeaderProps) {
           Ajouter un joueur
         </button> */}
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <p className="hidden md:block">Je suis</p>
           <select
             className="form-select border-b-2 border-emerald-400 py-1 font-sans hover:cursor-pointer hover:brightness-110 active:brightness-125"
@@ -68,7 +68,7 @@ export default function Header({ userData, user, setUser }: HeaderProps) {
                 </option>
               ))}
           </select>
-        </div>
+        </div> */}
       </div>
 
       <NewUserModal open={open} setOpen={setOpen} />
