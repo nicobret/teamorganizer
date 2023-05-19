@@ -2,6 +2,7 @@ import { User } from "../../lib/users";
 import { weeks } from "../../lib/weeks";
 import { useState } from "react";
 import NewUserModal from "./components/NewUserModal";
+import { FiSettings } from "react-icons/fi";
 
 interface HeaderProps {
   userData: User[];
@@ -13,12 +14,17 @@ export default function Header() {
   const [week, setWeek] = useState(1);
   const [open, setOpen] = useState(false);
 
+  function handleClick() {
+    setOpen(true);
+  }
+
   return (
     <>
-      <div className="flex items-center gap-6 border-t-8 border-emerald-100 py-2 font-title text-2xl italic md:gap-12">
-        <h1 className="ml-2 whitespace-nowrap text-4xl text-emerald-500">
-          Team Organizer
-        </h1>
+      <header className="flex items-center justify-between gap-6 border-t-8 border-emerald-200 px-4 py-2 text-2xl md:gap-12">
+        <h1 className="text-4xl text-emerald-500">Five</h1>
+        <button onClick={handleClick}>
+          <FiSettings className="text-emerald-500" />
+        </button>
 
         {/* <div className="ml-auto flex items-center gap-2">
           <p className="hidden md:block">Semaine du</p>
@@ -69,7 +75,7 @@ export default function Header() {
               ))}
           </select>
         </div> */}
-      </div>
+      </header>
 
       <NewUserModal open={open} setOpen={setOpen} />
     </>

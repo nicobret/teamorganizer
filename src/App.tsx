@@ -1,13 +1,65 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/header";
-import { User, userData } from "./lib/users";
+import { User } from "./lib/users";
 import { Week, weeks } from "./lib/weeks";
 import Availability from "./components/availability";
 import Teams from "./components/teams";
 import UserGroup from "./components/availability/components/UserGroup";
 
 function App() {
-  const [userId, setUserId] = useState(userData[0].id);
+  const [users, setUsers] = useState<User[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchUserData() {
+    try {
+      const data = await fetch(
+        // "https://data.mongodb-api.com/app/data-ugzoo/endpoint/data/v1/action/find",
+        "https://eu-west-2.aws.data.mongodb-api.com/app/data-ugzoo/endpoint/data/v1/action/find",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Request-Headers": "*",
+            "api-key":
+              "wEmQ5uA5klUqcJCdoBbquhJ1ExCQuudQhTpyLNapDcsHegcuHiZxVadg3CXbxNUj",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            collection: "users",
+            database: "team-organizer",
+            dataSource: "Cluster0",
+            filter: {},
+          }),
+        }
+      );
+      const json = await data.json();
+      console.log(json);
+      setUsers(json.documents);
+    } catch (error) {
+      console.log(error);
+      setError(JSON.stringify(error));
+    }
+  }
+
+  useEffect(() => {
+    fetchUserData();
+    return () => {
+      setUsers([]);
+      setError(null);
+    };
+  }, []);
+
+  if (error) {
+    return <p>Une erreur s'est produite</p>;
+  }
+  if (users.length === 0) {
+    return <p className="animate-pulse text-4xl">Loading...</p>;
+  }
+  return <Home users={users} />;
+}
+
+function Home({ users }: { users: User[] }) {
+  const [userId, setUserId] = useState(users[0].id);
   console.log("🚀 ~ file: App.tsx:18 ~ App ~ userId:", userId);
   const [weekId, setWeekId] = useState(weeks[0].id);
   const [availablePlayersId, setAvailablePlayersId] = useState<number[]>([]);
@@ -43,7 +95,7 @@ function App() {
     <div className="mx-auto max-w-6xl space-y-8">
       <Header />
 
-      <div className="flex flex-col items-center justify-center gap-8 font-title text-3xl md:flex-row md:gap-12">
+      <div className="flex flex-col gap-4 text-xl md:flex-row md:gap-12">
         <div>
           <label htmlFor="week">Semaine du</label>
           <select
@@ -62,13 +114,13 @@ function App() {
         </div>
 
         <div>
-          <label htmlFor="user">Je m'appelle</label>
+          <label htmlFor="user">Nom</label>
           <select
             name="user"
             id="user"
             value={userId}
             onChange={(e) => setUserId(parseInt(e.target.value))}
-            className="ml-4 border-x-0 border-b-2 border-t-0 border-emerald-400 py-1 hover:cursor-pointer hover:brightness-110 active:brightness-125"
+            className="ml-4 border-b-2 border-emerald-400 py-1 hover:cursor-pointer hover:brightness-110 active:brightness-125"
           >
             {userData.map((user: User) => (
               <option key={user.id} value={user.id}>
@@ -79,7 +131,7 @@ function App() {
         </div>
       </div>
 
-      <fieldset className="flex items-center justify-center gap-4 font-title text-3xl">
+      <fieldset className="flex justify-center gap-4 text-xl">
         <p>Je suis disponible</p>
         <input
           type="radio"
@@ -147,7 +199,7 @@ function UserGroups({
   console.log("🚀 ~ file: App.tsx:141 ~ retiredUsers:", retiredUsers);
 
   return (
-    <div className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3">
+    <div className="m-2 rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3">
       <div className="flex items-center gap-8">
         <h2 className="text-xl">Joueurs</h2>
         <p className="text-emerald-500">{availableUsers.length}/10</p>
@@ -157,14 +209,23 @@ function UserGroups({
       </div>
 
       {open && (
-        <div className="mt-4 grid-cols-4 gap-4 md:grid">
-          <UserGroup title="Ils n'ont pas répondu" users={waitingUsers} />
-          <UserGroup title="Ils sont chauds" users={availableUsers} />
-          <UserGroup title="Ils ne sont pas chauds" users={unavailableUsers} />
-          <UserGroup
-            title="Ils ont raccroché les crampons"
-            users={retiredUsers}
-          />
+        <div className="mt-4 grid grid-cols-2 gap-4 divide-x-2">
+          <div>
+            <UserGroup title="Ils n'ont pas répondu" users={waitingUsers} />
+
+            <UserGroup
+              title="Ils ont raccroché les crampons"
+              users={retiredUsers}
+            />
+          </div>
+
+          <div>
+            <UserGroup title="Ils sont chauds" users={availableUsers} />
+            <UserGroup
+              title="Ils ne sont pas chauds"
+              users={unavailableUsers}
+            />
+          </div>
         </div>
       )}
     </div>
