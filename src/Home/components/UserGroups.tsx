@@ -1,4 +1,5 @@
 import { useState } from "react";
+import UserGroup from "./UserGroup";
 
 function UserGroups({
   availablePlayersId,
