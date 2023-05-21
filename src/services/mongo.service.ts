@@ -1,35 +1,29 @@
 import { realmApp } from "./realm.service";
 
-if (!import.meta.env.VITE_MONGO_CLUSTER_NAME) {
-  throw new Error("Missing VITE_MONGO_CLUSTER_NAME");
-}
-if (!import.meta.env.VITE_MONGO_DATABASE_NAME) {
-  throw new Error("Missing VITE_MONGO_DATABASE_NAME");
-}
-
 const client = realmApp.currentUser?.mongoClient(
   import.meta.env.VITE_MONGO_CLUSTER_NAME
 );
 
-const weeksCollection = client
+const matchdaysCollection = client
   ?.db(import.meta.env.VITE_MONGO_DATABASE_NAME)
-  .collection("weeks");
+  .collection("matchdays");
 
 const mongo = {
-  async getWeeks() {
-    return weeksCollection?.find();
+  async getMatchdays() {
+    console.log("getMatchdays");
+    return matchdaysCollection?.find();
   },
-  async getWeek(id: string) {
-    return weeksCollection?.findOne({ _id: id });
+  async getMatchday(id: string) {
+    return matchdaysCollection?.findOne({ _id: id });
   },
-  async createWeek(week: any) {
-    return weeksCollection?.insertOne(week);
+  async createMatchday(matchday: any) {
+    return matchdaysCollection?.insertOne(matchday);
   },
-  async updateWeek(week: any) {
-    return weeksCollection?.updateOne({ _id: week._id }, week);
+  async updateMatchday(matchday: any) {
+    return matchdaysCollection?.updateOne({ _id: matchday._id }, matchday);
   },
-  async deleteWeek(id: string) {
-    return weeksCollection?.deleteOne({ _id: id });
+  async deleteMatchday(id: string) {
+    return matchdaysCollection?.deleteOne({ _id: id });
   },
 };
 
