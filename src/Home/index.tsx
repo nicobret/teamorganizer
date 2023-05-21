@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { realmApp } from "../services/realm.service";
+// import { useState } from "react";
+// import { realmApp } from "../services/realm.service";
 import { BsCalendarWeek, BsClockHistory } from "react-icons/bs";
 import Header from "./components/Header";
 
 function Home({ weeks }: any) {
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const user = realmApp.currentUser;
+  console.log("🚀 ~ file: index.tsx:7 ~ Home ~ weeks:", weeks);
+  // const [historyOpen, setHistoryOpen] = useState(false);
+  // const [calendarOpen, setCalendarOpen] = useState(false);
+  // const user = realmApp.currentUser;
 
   return (
     <div className="relative">
