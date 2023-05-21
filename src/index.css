@@ -5,8 +5,8 @@
 :root {
   font-family: 'Instrument Serif', serif;
   font-family: 'Raleway', sans-serif;
-  /* line-height: 2; */
   color: rgb(34, 34, 34);
+  background-color: #ecfdf5;
 
   /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

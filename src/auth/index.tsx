@@ -1,17 +1,21 @@
 import { useState } from "react";
 import * as Realm from "realm-web";
+
 import {
   loginEmailPassword,
   registerEmailPassword,
 } from "../services/realm.service";
+
 import SigninForm from "./components/SigninForm";
 import SignupForm from "./components/SignupForm";
+import mongo from "../services/mongo.service";
 
 type LoginProps = {
   setUser: (user: Realm.User) => void;
+  setWeeks: (weeks: any[]) => void;
 };
 
-const Signin = ({ setUser }: LoginProps) => {
+const Signin = ({ setUser, setWeeks }: LoginProps) => {
   const [open, setOpen] = useState(false);
 
   async function handleSubmitRegister(e: React.FormEvent<HTMLFormElement>) {
@@ -32,8 +36,19 @@ const Signin = ({ setUser }: LoginProps) => {
     e.preventDefault();
     const email = e.currentTarget.email.value;
     const password = e.currentTarget.password.value;
-    const user = await loginEmailPassword(email, password);
-    setUser(user);
+
+    try {
+      const user = await loginEmailPassword(email, password);
+      const weeks = await mongo.getWeeks();
+      setWeeks(weeks || []);
+      setUser(user);
+    } catch (error: any) {
+      console.log(
+        "🚀 ~ file: index.tsx ~ line 73 ~ handleSubmit ~ error",
+        error
+      );
+      alert("Erreur lors de la connexion: " + error.message);
+    }
   }
 
   return (
