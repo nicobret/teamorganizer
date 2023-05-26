@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { realmApp } from "./services/realm.service";
 import Home from "./Home";
-// import * as Realm from "realm-web";
-import mongo from "./services/mongo.service";
 import matchday from "./types/matchday.type";
+import * as Realm from "realm-web";
 
 function App() {
   const [user, setUser] = useState<Realm.User | null>(realmApp.currentUser);
-  const [data, setData] = useState<
-    Realm.Services.MongoDB.MongoDBCollection<matchday>[] | null
-  >([]);
+  console.log("🚀 ~ file: App.tsx:9 ~ App ~ user:", user);
+  const [data, setData] = useState<matchday[] | null>([]);
   const dataSource: string = import.meta.env.VITE_MONGO_DATA_SOURCE;
   const dbname: string = import.meta.env.VITE_MONGO_DATABASE_NAME;
 
@@ -19,23 +17,22 @@ function App() {
       const user = await realmApp.logIn(credentials);
       setUser(user);
     } catch (error: any) {
-      console.log(
-        "🚀 ~ file: index.tsx ~ line 73 ~ handleSubmit ~ error",
-        error
-      );
       alert("Erreur lors de la connexion: " + error.message);
     }
   }
 
   async function loadData() {
-    if (!user) return;
-    const data = await user
-      .mongoClient(dataSource)
-      .db(dbname)
-      .collection("matchdays")
-      .find();
-    console.log("🚀 ~ file: App.tsx:27 ~ loadData ~ data:", data);
-    setData(data);
+    try {
+      if (!user) return;
+      const data = await user
+        .mongoClient(dataSource)
+        .db(dbname)
+        .collection("matchdays")
+        .find();
+      setData(data);
+    } catch (error: any) {
+      alert("Erreur lors du chargement des données: " + error.message);
+    }
   }
 
   useEffect(() => {

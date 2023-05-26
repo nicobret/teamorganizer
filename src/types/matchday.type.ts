@@ -1,9 +1,10 @@
 type matchday = {
   _id: string;
   date: Date;
-  availablePlayers: any[];
-  teamA: any[];
-  teamB: any[];
+  status: string;
+  availablePlayers: Realm.User[];
+  teamA: Realm.User[];
+  teamB: Realm.User[];
 };
 
 export default matchday;

@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { BsCalendarWeek, BsClockHistory } from "react-icons/bs";
-import Header from "./components/Header";
-import MatchDayCard from "./components/MatchDayCard";
-import History from "./components/History";
-import Calendar from "./components/Calendar";
-import Info from "./components/Info";
-import matchday from "../types/matchday.type";
-// import mongo from "../services/mongo.service";
 import { realmApp } from "../services/realm.service";
-import mongo from "../services/mongo.service";
+import matchday from "../types/matchday.type";
+import { BsCalendarWeek, BsClockHistory } from "react-icons/bs";
+import Calendar from "./components/Calendar";
+import Header from "./components/Header";
+import History from "./components/History";
+import Info from "./components/Info";
+import MatchDayCard from "./components/MatchDayCard";
 
 type HomeProps = {
-  data: Realm.Services.MongoDB.MongoDBCollection<matchday>[];
+  data: matchday[];
   setData: (data: any[]) => void;
 };
 
@@ -54,9 +52,11 @@ function Home({ data, setData }: HomeProps) {
           {!data.length ? (
             <p className="text-center text-orange-50">Aucun match à venir</p>
           ) : (
-            data.map((matchday: matchday) => (
-              <MatchDayCard key={matchday._id} matchday={matchday} />
-            ))
+            data
+              .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+              .map((matchday: matchday) => (
+                <MatchDayCard key={matchday._id} matchday={matchday} />
+              ))
           )}
         </section>
       </main>
