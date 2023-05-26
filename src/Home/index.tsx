@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BsCalendarWeek, BsClockHistory } from "react-icons/bs";
 import Header from "./components/Header";
 import MatchDayCard from "./components/MatchDayCard";
@@ -8,39 +8,18 @@ import Info from "./components/Info";
 import matchday from "../types/matchday.type";
 // import mongo from "../services/mongo.service";
 import { realmApp } from "../services/realm.service";
+import mongo from "../services/mongo.service";
 
 type HomeProps = {
-  matchdays: matchday[];
-  setMatchdays: (matchdays: matchday[]) => void;
+  data: Realm.Services.MongoDB.MongoDBCollection<matchday>[];
+  setData: (data: any[]) => void;
 };
 
-function Home({ matchdays, setMatchdays }: HomeProps) {
+function Home({ data, setData }: HomeProps) {
+  // const [matchdays, setMatchdays] = useState<matchday[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const user = realmApp.currentUser;
-
-  useEffect(() => {
-    if (!user) return;
-    async function fetchMatchDays() {
-      try {
-        if (!user) return;
-        const data = await user
-          .mongoClient("matchdayservice")
-          .db("teamorganizer")
-          .collection("matchdays")
-          .find({});
-        console.log("🚀 ~ file: index.tsx:33 ~ fetchMatchDays ~ data:", data);
-        setMatchdays(data || []);
-      } catch (error: any) {
-        console.log(
-          "🚀 ~ file: index.tsx ~ line 73 ~ handleSubmit ~ error",
-          error
-        );
-      }
-    }
-    fetchMatchDays();
-    return () => setMatchdays([]);
-  }, []);
 
   return (
     <div className="mx-auto h-screen max-w-6xl">
@@ -72,10 +51,10 @@ function Home({ matchdays, setMatchdays }: HomeProps) {
         <Calendar open={calendarOpen} setOpen={setCalendarOpen} />
 
         <section className="space-y-4">
-          {!matchdays.length ? (
+          {!data.length ? (
             <p className="text-center text-orange-50">Aucun match à venir</p>
           ) : (
-            matchdays.map((matchday) => (
+            data.map((matchday: matchday) => (
               <MatchDayCard key={matchday._id} matchday={matchday} />
             ))
           )}

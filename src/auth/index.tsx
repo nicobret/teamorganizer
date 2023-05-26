@@ -8,15 +8,12 @@ import {
 
 import SigninForm from "./components/SigninForm";
 import SignupForm from "./components/SignupForm";
-import mongo from "../services/mongo.service";
-import matchday from "../types/matchday.type";
 
 type LoginProps = {
   setUser: (user: Realm.User) => void;
-  setMatchdays: (matchdays: matchday[]) => void;
 };
 
-const Signin = ({ setUser, setMatchdays }: LoginProps) => {
+const Signin = ({ setUser }: LoginProps) => {
   const [open, setOpen] = useState(false);
 
   async function handleSubmitRegister(e: React.FormEvent<HTMLFormElement>) {
@@ -40,8 +37,6 @@ const Signin = ({ setUser, setMatchdays }: LoginProps) => {
 
     try {
       const user = await loginEmailPassword(email, password);
-      const matchdays = await mongo.getMatchdays();
-      setMatchdays(matchdays || []);
       setUser(user);
     } catch (error: any) {
       console.log(
